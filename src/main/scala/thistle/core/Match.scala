@@ -40,6 +40,12 @@ case class Match[T](
   def end: Int =
     nodes.last.index
 
+  def head: ImmutableMatchNode[T] =
+    nodes.head
+
+  def tail: List[ImmutableMatchNode[T]] =
+    nodes.tail
+
   override def toString(): String =
     "Match(%s)".format(nodes.mkString(", "))
 }

@@ -43,20 +43,29 @@ class MatchTree[T](
   def allIncompleteMatches(): Iterator[Match[T]] =
     iterator.filter(_.isIncomplete)
 
-  def uniqueCountsPerStep(): List[Int] = {
+  def uniqueCountsPerStep(): List[Int] =
+    uniqueCounts(iterator)
+
+  def uniqueCountsPerGroup[G](fn: Match[T] => G): Map[G, List[Int]] =
+    iterator
+      .toList
+      .groupBy(m => fn(m))
+      .mapValues(v => uniqueCounts(v.toIterator))
+
+  private def uniqueCounts(iterator: Iterator[Match[T]]): List[Int] = {
     val emptySetMap = (0 until predicates.size).map((_ -> Set[Int]())).toMap
 
     iterator
       .flatMap(_.nodes)
-        .foldLeft(emptySetMap)(
-            (acc, node) =>
-                acc.updated(node.stepIndex, Set(node.elementIndex) ++ acc.getOrElse(node.stepIndex, Set()))
-        )
-        .mapValues(_.size)
-        .toList
-        .sortBy(_._1)
-        .map(_._2)
-    }
+      .foldLeft(emptySetMap)(
+        (acc, node) =>
+          acc.updated(node.stepIndex, Set(node.elementIndex) ++ acc.getOrElse(node.stepIndex, Set()))
+      )
+      .mapValues(_.size)
+      .toList
+      .sortBy(_._1)
+      .map(_._2)
+  }
 }
 
 object MatchTree {

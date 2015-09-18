@@ -108,4 +108,29 @@ class MatchTreeSpec extends FunSpec {
       assert(mt.uniqueCountsPerStep == List(1, 3, 1))
     }
   }
+
+  describe("uniqueCountsPerGroup") {
+    it("should count unique counts for a single group") {
+      implicit val series = Vector('a', 'b', 'b', 'c', 'b')
+      val query = Query(Character.isCharacter('a'), General.equalsValue('b'), General.equalsValue('c') )
+      val mt = MatchTree(query)
+
+      val actual = mt.uniqueCountsPerGroup((c: Match[Char]) => c.head.value == 'a')
+      val expected = Map(true -> List(1, 3, 1))
+      assert(actual == expected)
+  }
+
+  it("should count unique counts for multiple groups") {
+      implicit val series = Vector('a', 'b', 'b', 'c', 'b')
+      val query = Query(Character.isCharacter('a'), General.equalsValue('b'), General.equalsValue('c') )
+      val mt = MatchTree(query)
+
+      val actual = mt.uniqueCountsPerGroup((c: Match[Char]) => c.isComplete)
+      val expected = Map(
+        true -> List(1, 2, 1),
+        false -> List(1, 1, 0)
+      )
+      assert(actual == expected)
+    }
+  }
 }
