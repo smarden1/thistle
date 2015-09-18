@@ -62,7 +62,7 @@ object Node {
     pathWalk(false, nodes)
 
   @tailrec
-  def pathWalk[T <: Node[T]](
+  private def pathWalk[T <: Node[T]](
     includeAllNodes: Boolean,
     stack: List[T],
     prefix: List[T] = Nil,
