@@ -288,9 +288,5 @@ class NodeSpec extends FunSpec {
     it("should have depth of one for single nodes") {
       assert(Node.maxDepth(SimpleNode("a")) == 1)
     }
-
-    it("should have depth of zero for empty stacks") {
-      assert(Node.maxDepth(Nil) == 0)
-    }
   }
 }

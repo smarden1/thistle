@@ -87,7 +87,7 @@ object Node {
       case _ => acc
     }
 
-  def maxDepth[T <: Node[T]](stack: List[(T, Int)]): Int =
+  private def maxDepth[T <: Node[T]](stack: List[(T, Int)]): Int =
     stack match {
       case (node, depth)::tail => Math.max(depth, maxDepth(node.children.map((_, depth + 1)) ++ tail))
       case _ => 0
